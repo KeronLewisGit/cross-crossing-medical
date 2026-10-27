@@ -13,7 +13,7 @@ const OUT_HTML = path.resolve('dist/proposal/proposal.html');
 const OUT_PDF = path.resolve('dist/proposal/Cross-Crossing-Medical-Centre-Website-Proposal.pdf');
 const MAX_MB = 9.5;
 const DATE = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
-const TESTS = process.env.TEST_COUNT ?? '85';
+const TESTS = process.env.TEST_COUNT ?? '116';
 const img = (f) => 'file://' + f;
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
 
@@ -351,7 +351,7 @@ const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>
     ${FEATURES.map(([a, f]) => `<tr><td><b>${esc(a)}</b></td><td><div class="pill-row">${f.map((x) => `<span class="pill">${esc(x)}</span>`).join('')}</div></td></tr>`).join('')}
   </tbody></table>
   <h2>How a request flows</h2>
-  <p>A daughter asks for a cardiology appointment for her mother late on a Sunday, ticking Monday or Wednesday mornings. She gets a reference such as <b>AP-26-00087</b> on screen and by email; the email carries no medical details. On Monday the front desk sees the request at the top of the queue with a call-back time, calls with one tap, books the clinic in the centre's own diary and records the date. If nobody calls within two hours, the request turns red on every front-desk overview. Registrations go to the records team, who alone can open the ID and insurance card photos; job applications go to HR.</p>
+  <p>A daughter asks for a cardiology appointment for her mother on a Sunday afternoon, ticking Monday or Wednesday mornings. She gets a reference such as <b>AP-26-00087</b> on screen and by email; the email carries no medical details, not even the clinic. The front desk sees the request at the top of the queue with a call-back time, calls with one tap, books the clinic in the centre's own diary and records the date. If nobody calls within two hours, the request turns red on every front-desk overview. Registrations go to the records team, who alone can open the ID and insurance card photos; job applications go to HR.</p>
   <h2>Content and imagery</h2>
   <p>Every service, clinic, phone number and description is taken from the centre's current website. Nothing is invented: no doctors' names, prices, accreditations, insurers or testimonials. The building, sign and reception photographs are the centre's own, from its current site; the clinical photographs are licensed from Wikimedia Commons, credited on the site, and ready to be replaced with your own. The requests, patients and staff shown in these screenshots are clearly marked demo data with fictitious names.</p>
   <h2>What the site deliberately does not do</h2>
@@ -391,7 +391,7 @@ ${sectionPages(sec)}
   <h1>Built properly, hosted for you</h1>
   <div class="cols">
     <div class="card"><h3>Platform</h3><ul><li>Laravel 13 on PHP 8.3 with a MySQL database: open-source and widely supported, with no page builder lock-in</li><li>Tailwind CSS and Alpine.js; fonts served from your own site</li><li>No background servers needed; emails send directly</li><li>${TESTS} automated tests cover every form, every role and the document-access rules</li></ul></div>
-    <div class="card"><h3>Patient privacy</h3><ul><li>Consent recorded with the time on every form, under the Data Protection Act, 2011</li><li>ID, insurance cards, referrals and CVs stored outside the public website</li><li>ID and insurance cards open for the records team only; every opening logged</li><li>Emails carry a reference number only, never health details</li><li>CSV exports carry contact and status columns only</li></ul></div>
+    <div class="card"><h3>Patient privacy</h3><ul><li>Consent recorded with the time on every form, under the Data Protection Act, 2011</li><li>ID, insurance cards, referrals and CVs stored outside the public website</li><li>ID and insurance cards open for the records team only; every opening logged</li><li>Emails carry the reference number and name, never the clinic or any health details</li><li>CSV exports carry contact and status columns only</li></ul></div>
     <div class="card"><h3>Speed and search</h3><ul><li>Responsive WebP photography in three sizes</li><li>XML sitemap and schema.org data for the centre and its vacancies</li><li>Old Google Site addresses redirect permanently to the new pages</li><li>Accessible: keyboard navigation, labelled forms, and status chips that pair an icon with text</li></ul></div>
     <div class="card"><h3>Ownership</h3><ul><li>Your content, photos, domain and patient data are always yours</li><li>Staff manage requests, vacancies, handouts and the site notice themselves</li><li>Hosting, backups, monitoring and updates are handled by Code Canvas under the monthly plan</li></ul></div>
   </div>

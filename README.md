@@ -6,14 +6,14 @@ Website and staff desk for Cross Crossing Medical Centre (CCMC), the 24-hour pri
 
 - **Public site.** Home, services and a page per department (Accident and Emergency, cardiac care, Renal Centre & Dialysis Unit, laboratory, X-ray and bone density, surgical suites, sleep and lung tests, vaccinations, dental), specialist clinics, patient handouts, health self-checks (BMI without JavaScript, plus links to diabetes and FRAX risk tests), careers with vacancies, about (with the centre's published articles), contact with map, privacy notice, photo credits and a site map. Mobile-first, light and dark themes, a phone action bar (Call, Request appointment) on every page, and every page and form works without JavaScript. Old Google Site addresses (`/newpatient`, `/facilities/dialysis`, `/site/ccmctt/…`) redirect to the new pages.
 - **Accident and Emergency has no form, on purpose.** Every form says it is not for emergencies and points to the emergency room and 811.
-- **Five forms, each with a reference number on screen and by email.** Confirmation emails carry the reference only, never health details.
+- **Five forms, each with a reference number on screen and by email.** Emails (to the patient and to the office) carry the reference, type and name only: never the clinic or test, or any other health detail.
   - Appointment request (`AP-26-00042`): clinic or test, been before, preferred days, time of day and earliest date, an optional referral letter, and who it is for. Nothing is booked online; the front desk calls back to agree a time.
   - New patient pre-registration (`PR-…`): patient details, contact (patient, parent or carer), emergency contact, the ID type to bring, and optional photos of the ID and insurance card.
   - Dialysis enquiry (`DI-…`): new, transferring or a family member asking, and sessions that suit. The visiting/holiday option only appears when `CCMC_DIALYSIS_VISITORS=true`.
   - Job application (`CV-…`): vacancy or kind of role, registration and availability, CV (PDF/Word) and up to three certificates.
   - Contact message (`EN-…`).
 
-  Every form records Data Protection Act consent with a timestamp. All uploads go to the private disk (`storage/app/private/submissions/{id}/`), never the web root.
+  Every form records Data Protection Act consent with a timestamp. All uploads go to the private disk (`storage/app/private/submissions/{id}/`), never the web root. If a form comes back with an error, valid uploads are kept for that visitor (`storage/app/private/stash/`, listed as "Attached: …" with a Remove box) so nobody has to photograph an ID card twice; staff cannot open them until the form is sent, and stashes are deleted after 24 hours.
 - **No results portal.** Lab results are never shown online or emailed; the lab page explains how patients collect them.
 - **Staff desk** at `/admin`, with four roles:
   - **Administrator**: everything, except opening ID and insurance cards.
@@ -21,7 +21,7 @@ Website and staff desk for Cross Crossing Medical Centre (CCMC), the 24-hour pri
   - **Registration & medical records**: registrations, and the only role that can open ID and insurance card photos.
   - **Human resources**: job applications and vacancies.
 
-  Every opening of any document (ID, insurance card, referral, CV, certificate) is written to `file_accesses` and to the request's timeline, and listed in the document log (admin and records). The overview leads with the one number each role must act on: requests not called back within their response time (2 hours for appointments and dialysis, 4 for messages, 24 for registrations, 3 days for applications). It also shows the week's figures, median time to first call, requests per day, a breakdown by type, top clinics, the call queue and the next three days' bookings. The inbox has type tabs, status/assignee/overdue filters, search and a CSV export without clinical details. Each request has one-tap call and WhatsApp, status, assignment, booked date and time, notes and a timeline. Also: the appointment sheet (14 days plus requests still waiting), vacancies, handouts (PDF upload or link), staff accounts and a site-wide notice.
+  Every opening of any document (ID, insurance card, referral, CV, certificate) is written to `file_accesses` and to the request's timeline, and listed in the document log (admin and records). The overview leads with the one number each role must act on: requests not called back within their response time (2 hours for appointments and dialysis, 4 for messages, 24 for registrations, 3 days for applications). It also shows the week's figures, median time to first call, requests per day, a breakdown by type, top clinics, the call queue and the next three days' bookings. The inbox has type tabs, status/assignee/overdue filters, search and a CSV export without clinical details (no clinic or test either). Each request has one-tap call and WhatsApp, status, assignment, booked date and time, notes and a timeline. Also: the appointment sheet (14 days plus requests still waiting), vacancies, handouts (PDF upload or link), staff accounts and a site-wide notice.
 
 ## Requirements
 
@@ -33,6 +33,7 @@ PHP 8.3 or 8.4 with GD, Composer 2, Node 20+ for building assets, and SQLite loc
 composer install
 cp .env.example .env && php artisan key:generate
 php artisan migrate --seeder=DemoSeeder   # demo staff, 3 vacancies, 11 handouts, ~118 requests over 30 days
+                                          # refuses to run with APP_ENV=production unless CCMC_PREVIEW=true
 npm install && npm run build
 php artisan serve --port=8109
 ```
@@ -71,3 +72,7 @@ See [INSTALL-HOSTINGER.md](INSTALL-HOSTINGER.md). `scripts/package-hostinger.sh`
 - **Logo.** The building mark is redrawn from the 111-pixel logo on the Google Site. Ask for the original artwork.
 - **Domain.** ccmctt.com and www.ccmctt.com forward to sites.google.com/site/ccmctt. Get access to the DNS, keep the MX records, and retire the Google Site after launch.
 - **Privacy notice**: a draft for the centre's legal adviser, under the Data Protection Act, 2011.
+- **Retention.** The privacy notice promises 12 months for requests and six months for applications, but nothing deletes them automatically yet. Agree the periods, then add a scheduled prune (needs a Hostinger cron job).
+- **Call-back hours.** The overdue clock runs 24/7 (2 hours for an appointment sent at midnight), and the thank-you page says "usually within 2 hours". Ask whether the appointments desk works nights; if not, pause the clock outside desk hours and change the wording.
+- **Email sending.** ccmctt.com mail is on Google Workspace and the domain has no SPF record. Get a sending mailbox (e.g. `web@ccmctt.com`) and publish SPF/DKIM before launch (INSTALL-HOSTINGER.md, step 4).
+- **DEXA image.** The "DEXA report" picture from the Google Site is a GE Lunar vendor sample ("Patient: Sample, Report"), not the centre's own photo. Replace it with the centre's own (anonymised) report or a licensed image.

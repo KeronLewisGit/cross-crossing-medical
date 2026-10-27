@@ -77,7 +77,7 @@ async function measureBlocks(maxH) {
       if (kids.length === 1) return explode(kids[0]); // wrapper div – look inside it
       return kids.flatMap(explode);
     };
-    // Sales desk layout: the content column is <main id="content">; public layout: body-level header/main/footer.
+    // Staff desk layout: the content column is <main id="content">; public layout: body-level header/main/footer.
     const adminMain = document.querySelector('body.admin main#content');
     const roots = adminMain
       ? [...adminMain.children].map(el => ({ el, trailing: false }))
