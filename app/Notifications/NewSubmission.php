@@ -2,13 +2,15 @@
 
 namespace App\Notifications;
 
+use App\Enums\SubmissionType;
 use App\Models\Submission;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 /**
- * To the centre: something new to act on. Only the reference, the type, the name and the
- * clinic travel by email; reasons, dates of birth, insurers and documents stay in the back office.
+ * To the centre: something new to act on. Only the reference, the type and the name travel by
+ * email (plus the vacancy for a job application). The clinic or test is health information, so it
+ * stays in the back office with reasons, dates of birth, insurers and documents.
  */
 class NewSubmission extends Notification
 {
@@ -28,7 +30,7 @@ class NewSubmission extends Notification
             ->subject("{$s->type->label()} {$s->reference}")
             ->line("{$s->type->label()} from {$s->name}.");
 
-        if ($about = $s->subject()) {
+        if ($s->type === SubmissionType::Career && ($about = $s->subject())) {
             $mail->line('About: '.$about);
         }
 

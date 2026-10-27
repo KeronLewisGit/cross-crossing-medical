@@ -27,8 +27,9 @@ class SubmissionReceived extends Notification
             ->greeting('Thank you, '.strtok($s->name, ' ').'.')
             ->line("We have your {$this->what()}. Your reference is **{$s->reference}**.");
 
-        if ($s->type === SubmissionType::Appointment && ($about = $s->subject())) {
-            $mail->line('Clinic or test: '.$about.'. This is a request: the appointment is only booked once we have called you to agree a time.');
+        // The clinic or test is health information, so it is not repeated here.
+        if ($s->type === SubmissionType::Appointment) {
+            $mail->line('This is a request: the appointment is only booked once we have called you to agree a time.');
         }
 
         $mail->line(match ($s->type) {
