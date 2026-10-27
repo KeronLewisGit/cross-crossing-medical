@@ -154,16 +154,42 @@ class Submission extends Model
         return $this->status === SubmissionStatus::New && $this->dueAt()->isPast();
     }
 
-    public function moveTo(SubmissionStatus $status): bool
+    /**
+     * Change the status (stamping first contact) as one conditional UPDATE. It only applies if the
+     * row still has the status this copy was loaded with, so when two staff (or a double-tapped
+     * Save) change it at the same moment exactly one wins and the timeline gets one note, not two.
+     */
+    public function claimStatus(SubmissionStatus $status): bool
     {
         if ($this->status === $status) {
             return false;
         }
-        $this->status = $status;
-        $this->status_changed_at = now();
-        if ($status !== SubmissionStatus::New) {
-            $this->first_contacted_at ??= now();
+        $changes = ['status' => $status, 'status_changed_at' => now()];
+        if ($status !== SubmissionStatus::New && $this->first_contacted_at === null) {
+            $changes['first_contacted_at'] = now();
         }
+
+        return $this->claim($changes, ['status']);
+    }
+
+    /**
+     * Write $changes only if the $guard columns still hold the values this copy was loaded with.
+     *
+     * @param  array<string, mixed>  $changes
+     * @param  list<string>  $guard
+     */
+    public function claim(array $changes, array $guard): bool
+    {
+        $raw = array_intersect_key((clone $this)->forceFill($changes)->getAttributes(), $changes);
+        $query = static::query()->whereKey($this->getKey());
+        foreach ($guard as $column) {
+            $original = $this->getRawOriginal($column);
+            $original === null ? $query->whereNull($column) : $query->where($column, $original);
+        }
+        if ($query->toBase()->update($raw + ['updated_at' => $this->freshTimestampString()]) !== 1) {
+            return false;
+        }
+        $this->forceFill($changes)->syncOriginalAttributes(array_keys($changes));
 
         return true;
     }

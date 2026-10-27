@@ -31,7 +31,7 @@ class SubmissionFactory extends Factory
     public function type(SubmissionType $type): static
     {
         return $this->state(fn () => match ($type) {
-            SubmissionType::Registration => ['type' => $type, 'service_key' => null, 'details' => ['patient_name' => 'Test Patient', 'patient_dob' => '1980-01-01', 'for_whom' => 'self', 'id_type' => 'national_id', 'insured' => 'no']],
+            SubmissionType::Registration => ['type' => $type, 'service_key' => null, 'details' => ['patient_name' => 'Test Patient', 'patient_dob' => '1980-01-01', 'for_whom' => 'self', 'id_type' => 'national_id', 'insured' => false]],
             SubmissionType::Dialysis => ['type' => $type, 'service_key' => 'dialysis', 'details' => ['situation' => 'new', 'schedule' => 'mwf', 'shift' => array_key_first((array) ccmc('dialysis.shifts'))]],
             SubmissionType::Career => ['type' => $type, 'service_key' => 'registered-nurse', 'details' => ['experience' => '3-5', 'availability' => ['full-time']]],
             SubmissionType::Enquiry => ['type' => $type, 'service_key' => null, 'message' => 'A question', 'details' => ['topic' => 'general']],

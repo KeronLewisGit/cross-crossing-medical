@@ -76,6 +76,16 @@ enum SubmissionType: string
         return $this !== self::Enquiry;
     }
 
+    /**
+     * The statuses staff can choose for this type. A message has no booking, so no "Booked".
+     *
+     * @return list<SubmissionStatus>
+     */
+    public function statuses(): array
+    {
+        return array_values(array_filter(SubmissionStatus::cases(), fn (SubmissionStatus $s) => $this->hasBooking() || $s !== SubmissionStatus::Booked));
+    }
+
     /** Patient-facing requests that wait on a phone call. */
     public function isPatientCallback(): bool
     {

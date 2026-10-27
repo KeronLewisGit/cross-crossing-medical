@@ -13,7 +13,7 @@
             'Days that suit' => collect((array) ($d['days'] ?? []))->map(fn ($k) => $weekdays[$k] ?? $k)->implode(', ') ?: null,
             'Time of day' => ccmc('time_windows.'.($d['window'] ?? '')) ?: null,
             'Earliest date' => $date($d['from_date'] ?? null) ?? 'As soon as possible',
-            'Reason' => $d['reason'] ?? null,
+            'Reason' => $s->message,
         ],
         T::Dialysis => [
             'Situation' => F::dialysisSituations()[$d['situation'] ?? ''] ?? (ccmc('dialysis.situations.'.($d['situation'] ?? '')) ?: null),
@@ -30,7 +30,8 @@
             'Filled in by' => ($d['for_whom'] ?? 'self') === 'other' ? $s->name.(($d['relationship'] ?? null) ? ' ('.$d['relationship'].')' : '') : 'The patient',
             'Address' => trim(($d['address'] ?? '').', '.($d['town'] ?? ''), ', ') ?: null,
             'ID to bring' => F::ID_TYPES[$d['id_type'] ?? ''] ?? null,
-            'Insurance' => ($d['insured'] ?? 'no') === 'yes' ? ($d['insurer'] ?? 'Yes') : 'None or not sure',
+            // The form stores a boolean; older rows may hold 'yes'.
+            'Insurance' => in_array($d['insured'] ?? null, [true, 'yes'], true) ? ($d['insurer'] ?? 'Yes') : 'None or not sure',
             'Emergency contact' => trim(($d['emergency_name'] ?? '').(($d['emergency_relationship'] ?? null) ? ' ('.$d['emergency_relationship'].')' : '').' · '.format_phone((string) ($d['emergency_phone'] ?? '')), ' ·'),
             'Reminders' => ! empty($d['reminders']) ? 'Yes, please' : 'No',
         ] : ['Details' => 'Restricted to the registration and medical records team.'],
@@ -122,7 +123,7 @@
                     <label for="note-body" class="sr-only">Add a note</label>
                     <textarea id="note-body" name="body" rows="3" class="a-input w-full" placeholder="What happened on the call? Keep clinical detail in the patient file, not here." required maxlength="3000"></textarea>
                     <div class="flex flex-wrap items-center justify-between gap-3">
-                        <label class="flex min-h-11 items-center gap-2 text-sm"><input type="checkbox" name="contacted" value="1" class="h-5 w-5 accent-[color:var(--primary)]" @checked($s->status === SubmissionStatus::New)>I spoke to them (counts as first contact)</label>
+                        <label class="flex min-h-11 items-center gap-2 text-sm"><input type="checkbox" name="contacted" value="1" class="h-5 w-5 accent-[color:var(--primary)]">I spoke to them (counts as first contact and stops the call-back clock)</label>
                         <button class="a-btn a-btn-primary">Add note</button>
                     </div>
                 </form>
@@ -143,7 +144,7 @@
                 @csrf @method('PATCH')
                 <h2 class="font-semibold">Status</h2>
                 <div class="grid gap-2">
-                    @foreach (SubmissionStatus::cases() as $st)
+                    @foreach ($s->type->statuses() as $st)
                         <label class="flex min-h-11 cursor-pointer items-center gap-3 rounded-lg border border-line px-3 has-[:checked]:border-[color:var(--primary)] has-[:checked]:bg-soft"><input type="radio" name="status" value="{{ $st->value }}" class="h-5 w-5 accent-[color:var(--primary)]" @checked($s->status === $st)><x-icon :name="$st->icon()" class="h-4 w-4 text-ink-3" />{{ $st->label($s->type) }}</label>
                     @endforeach
                 </div>
