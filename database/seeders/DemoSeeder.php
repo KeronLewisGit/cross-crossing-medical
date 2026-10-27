@@ -135,7 +135,7 @@ class DemoSeeder extends Seeder
         $patient = $forOther ? Arr::random(self::FIRST).' '.$last : $name;
         $dob = now()->subYears($forOther ? mt_rand(3, 88) : mt_rand(19, 80))->subDays(mt_rand(0, 364))->toDateString();
         $patientDetails = $forOther
-            ? ['for_whom' => 'other', 'patient_name' => $patient, 'relationship' => Arr::random(['mother', 'father', 'son', 'daughter', 'carer', 'wife', 'husband']), 'patient_dob' => $dob]
+            ? ['for_whom' => 'other', 'patient_name' => $patient, 'relationship' => Arr::random(['parent', 'child', 'carer', 'spouse', 'guardian']), 'patient_dob' => $dob]
             : ['for_whom' => 'self', 'patient_dob' => mt_rand(0, 100) < 80 ? $dob : null];
 
         $attrs = [
@@ -176,7 +176,7 @@ class DemoSeeder extends Seeder
                     'address' => mt_rand(2, 140).' '.Arr::random(['Main Road', 'Oliver Avenue', 'Rambert Street', 'Golconda Road', 'Pond Street', 'Hill Drive']),
                     'town' => Arr::random(self::TOWNS), 'id_type' => Arr::random(array_keys(FormController::ID_TYPES)),
                     'insured' => $insured, 'insurer' => $insured ? 'Demo Health Insurance Co.' : null,
-                    'emergency_name' => Arr::random(self::FIRST).' '.$last, 'emergency_relationship' => Arr::random(['spouse', 'mother', 'brother', 'daughter']),
+                    'emergency_name' => Arr::random(self::FIRST).' '.$last, 'emergency_relationship' => Arr::random(['spouse', 'parent', 'sibling', 'friend']),
                     'emergency_phone' => '868-'.mt_rand(300, 799).'-'.mt_rand(1000, 9999), 'reminders' => (bool) mt_rand(0, 1),
                 ]];
                 if (mt_rand(0, 100) < 75) {

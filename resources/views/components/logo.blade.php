@@ -13,7 +13,8 @@
         <span class="leading-none {{ $tone === 'light' ? 'text-white' : 'text-ink' }}">
             {{-- Phones: the name on two lines (the 24/7 band above already says "open now"). --}}
             <span @class(['font-display block font-semibold tracking-[-0.01em]', 'text-[0.95rem] leading-[1.1]' => $small, 'text-[1.02rem] leading-[1.1] sm:whitespace-nowrap sm:text-[1.15rem] sm:leading-none' => ! $small])>Cross Crossing @if($small)<br>@else<br class="sm:hidden">@endif Medical Centre</span>
-            <span @class(['mt-1 whitespace-nowrap text-[0.6875rem] font-extrabold uppercase tracking-[0.16em]', $tone === 'light' ? 'text-white/75' : 'text-ink-3', 'block' => $small, 'hidden sm:block' => ! $small])>San Fernando · Open 24/7</span>
+            {{-- The narrow staff sidebar has no room for the tagline. --}}
+            <span @class(['mt-1 whitespace-nowrap text-[0.6875rem] font-extrabold uppercase', $tone === 'light' ? 'text-white/75' : 'text-ink-3', 'hidden' => $small, 'hidden tracking-[0.16em] sm:block' => ! $small])>San Fernando · Open 24/7</span>
         </span>
     @endunless
 </span>

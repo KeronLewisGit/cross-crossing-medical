@@ -61,7 +61,7 @@ const CAPTIONS = {
   ],
   handouts: [
     'The patient corner: handouts grouped by topic. The old site\'s PDFs have gone, so these start as current NIH, MedlinePlus and PAHO pages; staff can upload the centre\'s own PDFs.',
-    'Bones and joints, vaccinations and general health.',
+    'Diabetes and nutrition, bones and joints, vaccinations and general health.',
   ],
   careers: ['Careers: open vacancies (examples here), how to apply, and the kinds of role the centre recruits, each linking to the application form.'],
   contact: [
