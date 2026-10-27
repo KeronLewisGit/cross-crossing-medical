@@ -118,9 +118,10 @@ class FormController extends Controller
         ]);
 
         $self = $data['for_whom'] === 'self';
-        SubmissionIntake::create(SubmissionType::Registration, $this->contactFields($data) + [
-            // The contact is who we call: the patient, or the parent or carer filling this in.
+        // The contact is who we call: the patient, or the parent or carer filling this in.
+        SubmissionIntake::create(SubmissionType::Registration, [
             'name' => $self ? trim((string) $data['patient_name']) : trim((string) $data['name']),
+        ] + $this->contactFields($data) + [
             'consented_at' => now(),
             'details' => [
                 'patient_name' => trim((string) $data['patient_name']),

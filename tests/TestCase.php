@@ -19,10 +19,4 @@ abstract class TestCase extends BaseTestCase
     {
         return User::factory()->role($role)->create();
     }
-
-    /** @return array<string, string> */
-    protected function contact(array $overrides = []): array
-    {
-        return array_merge(['name' => 'Shanice Joseph', 'phone' => '268-464-1234', 'email' => 'shanice@example.com', 'contact_pref' => 'whatsapp'], $overrides);
-    }
 }

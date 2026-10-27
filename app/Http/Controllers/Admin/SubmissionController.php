@@ -131,6 +131,7 @@ class SubmissionController extends Controller
      */
     public function file(Request $request, Submission $submission, SubmissionFile $file): StreamedResponse
     {
+        abort_unless($file->submission_id === $submission->id, 404);
         Gate::authorize('openFile', [$submission, $file]);
         abort_unless(Storage::disk('local')->exists($file->path), 404);
 

@@ -71,7 +71,7 @@ class HandoutController extends Controller
             'sort' => ['nullable', 'integer', 'min:0', 'max:999'],
         ], ['file.mimes' => 'Handouts must be PDF files.']);
 
-        $out = collect($data)->only(['title', 'category', 'summary', 'publisher', 'url'])->all();
+        $out = array_intersect_key($data, array_flip(['title', 'category', 'summary', 'publisher', 'url']));
         $out['published'] = $request->boolean('published');
         $out['sort'] = (int) ($data['sort'] ?? 100);
 
