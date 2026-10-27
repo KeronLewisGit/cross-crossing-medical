@@ -11,7 +11,7 @@
             @csrf
             <x-not-emergency />
             <x-form-errors />
-            <fieldset class="space-y-5" x-data="{ situation: '{{ old('situation') }}' }">
+            <fieldset class="space-y-5" x-data="{ situation: @js(old_text('situation', '')) }">
                 <legend class="fieldset-title mb-5"><span class="step">1</span>The patient's situation</legend>
                 <div class="grid gap-2" role="radiogroup" aria-label="Which best describes the patient?">
                     @foreach ($situations as $k => $label)
@@ -27,6 +27,7 @@
                     </div>
                 @endif
                 <x-field name="referral" label="Referral letter or latest dialysis summary" type="file" :optional="true" accept=".pdf,.jpg,.jpeg,.png,.webp,.heic,.heif" hint="A photo or PDF, up to 8 MB. Kept privately for the unit." />
+                <x-attached form="dialysis" field="referral" />
             </fieldset>
             <fieldset class="space-y-5">
                 <legend class="fieldset-title mb-5"><span class="step">2</span>Sessions that would suit</legend>

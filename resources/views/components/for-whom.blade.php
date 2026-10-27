@@ -1,6 +1,6 @@
 @props(['dob' => true, 'dobRequired' => false])
 {{-- "Is this for you or someone else?" Without JavaScript every field shows; with it, the patient fields appear only for someone else. --}}
-<div class="space-y-5" x-data="{ whom: '{{ old('for_whom', 'self') }}' }">
+<div class="space-y-5" x-data="{ whom: @js(old_text('for_whom', 'self')) }">
     <div>
         <p class="label" id="whom-label">Who is this for?</p>
         <div class="grid gap-2 sm:grid-cols-2" role="radiogroup" aria-labelledby="whom-label">

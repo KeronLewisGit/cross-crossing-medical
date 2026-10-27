@@ -9,6 +9,7 @@ use App\Notifications\NewSubmission;
 use App\Notifications\SubmissionReceived;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Every public form ends here: one submissions row with a reference, the uploads on the
@@ -19,7 +20,7 @@ final class SubmissionIntake
 {
     /**
      * @param  array<string, mixed>  $attributes
-     * @param  array<string, list<UploadedFile>>  $files  kind => files
+     * @param  array<string, list<UploadedFile|array{path: string, name: string, mime: string|null, size: int}>>  $files  kind => new uploads or UploadStash entries
      */
     public static function create(SubmissionType $type, array $attributes, array $files, Request $request): Submission
     {
@@ -31,13 +32,28 @@ final class SubmissionIntake
 
         foreach ($files as $kind => $list) {
             foreach ($list as $file) {
+                if ($file instanceof UploadedFile) {
+                    $file = [
+                        // Random file name, private disk, one folder per submission.
+                        'path' => (string) $file->store('submissions/'.$submission->id, 'local'),
+                        'name' => $file->getClientOriginalName(),
+                        'mime' => $file->getMimeType(),
+                        'size' => (int) $file->getSize(),
+                    ];
+                } else {
+                    // Kept from an earlier try (UploadStash): move it into the submission's folder.
+                    $to = 'submissions/'.$submission->id.'/'.basename($file['path']);
+                    if (! Storage::disk('local')->move($file['path'], $to)) {
+                        continue;
+                    }
+                    $file['path'] = $to;
+                }
                 $submission->files()->create([
                     'kind' => $kind,
-                    // Random file name, private disk, one folder per submission.
-                    'path' => $file->store('submissions/'.$submission->id, 'local'),
-                    'original_name' => mb_substr($file->getClientOriginalName(), 0, 200),
-                    'mime' => $file->getMimeType(),
-                    'size' => (int) $file->getSize(),
+                    'path' => $file['path'],
+                    'original_name' => mb_substr($file['name'], 0, 200),
+                    'mime' => $file['mime'],
+                    'size' => $file['size'],
                 ]);
             }
         }

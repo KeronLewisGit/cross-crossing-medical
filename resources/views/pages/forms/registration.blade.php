@@ -19,7 +19,7 @@
                 <x-field name="town" label="Town or village" :required="true" autocomplete="address-level2" maxlength="80" hint="e.g. Cross Crossing, Marabella, Gasparillo" class="input sm:max-w-md" />
             </fieldset>
 
-            <fieldset class="space-y-5" x-data="{ whom: '{{ old('for_whom', 'self') }}' }">
+            <fieldset class="space-y-5" x-data="{ whom: @js(old_text('for_whom', 'self')) }">
                 <legend class="fieldset-title mb-5"><span class="step">2</span>Who is filling this in?</legend>
                 <div class="grid gap-2 sm:grid-cols-2" role="radiogroup" aria-label="Who is filling this in?">
                     <label class="choice"><input type="radio" name="for_whom" value="self" x-model="whom" @checked(old('for_whom', 'self') === 'self')>I am the patient</label>
@@ -42,10 +42,11 @@
                 <x-field name="emergency_phone" label="Phone" type="tel" :required="true" inputmode="tel" maxlength="30" class="input sm:max-w-sm" />
             </fieldset>
 
-            <fieldset class="space-y-5" x-data="{ insured: '{{ old('insured', 'no') }}' }">
+            <fieldset class="space-y-5" x-data="{ insured: @js(old_text('insured', 'no')) }">
                 <legend class="fieldset-title mb-5"><span class="step">5</span>ID and insurance</legend>
                 <x-select name="id_type" label="Type of ID the patient will bring" :options="$idTypes" :required="true" />
                 <x-field name="id_card" label="Photo of the ID" type="file" :optional="true" accept=".pdf,.jpg,.jpeg,.png,.webp,.heic,.heif" hint="Take a photo with your phone, or bring it in. Up to 8 MB." />
+                <x-attached form="registration" field="id_card" />
                 <div>
                     <p class="label" id="ins-label">Does the patient have health insurance?</p>
                     <div class="grid gap-2 sm:grid-cols-2" role="radiogroup" aria-labelledby="ins-label">
@@ -57,6 +58,7 @@
                 <div class="space-y-5" x-show="insured === 'yes'" x-cloak>
                     <x-field name="insurer" label="Insurance company" maxlength="120" hint="Type the name as it appears on the card." />
                     <x-field name="insurance_card" label="Photo of the insurance card (both sides if you can)" type="file" accept=".pdf,.jpg,.jpeg,.png,.webp,.heic,.heif" hint="Up to 8 MB." />
+                    <x-attached form="registration" field="insurance_card" />
                 </div>
                 <p class="flex gap-2.5 rounded-xl bg-soft p-4 text-[0.9375rem]"><x-icon name="lock" class="mt-0.5 h-5 w-5 flex-none text-link" /><span>ID and insurance photos are stored privately, off the public website. Only the registration and medical records team can open them, and every opening is logged.</span></p>
             </fieldset>

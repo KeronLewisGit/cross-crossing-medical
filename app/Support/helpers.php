@@ -59,6 +59,16 @@ if (! function_exists('input_string')) {
     }
 }
 
+if (! function_exists('old_text')) {
+    /** Old input for a text box. An array posted where a string belongs (name[]=x) comes back as '', not a crash. */
+    function old_text(string $key, mixed $default = null): string
+    {
+        $value = old($key, $default);
+
+        return is_scalar($value) ? (string) $value : '';
+    }
+}
+
 if (! function_exists('lines_to_array')) {
     /**
      * Textarea with one item per line, bullets optional, to a clean list.

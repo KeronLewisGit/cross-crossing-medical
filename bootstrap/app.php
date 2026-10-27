@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\EnsureActive;
 use App\Http\Middleware\EnsureRole;
+use App\Http\Middleware\ScrubInvalidUtf8;
 use App\Http\Middleware\SecurityHeaders;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -14,7 +15,7 @@ $app = Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->web(append: [SecurityHeaders::class]);
+        $middleware->web(prepend: [ScrubInvalidUtf8::class], append: [SecurityHeaders::class]);
         $middleware->alias(['role' => EnsureRole::class, 'active' => EnsureActive::class]);
         $middleware->redirectGuestsTo(fn () => route('login'));
         $middleware->redirectUsersTo(fn () => route('admin.dashboard'));

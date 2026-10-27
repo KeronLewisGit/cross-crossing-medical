@@ -1,10 +1,11 @@
 @php
     $roles = (array) ccmc('career_roles');
-    $role = old('role', array_key_exists((string) request('role'), $roles) ? request('role') : null);
+    $asked = input_string(request()->query('role'));
+    $role = old_text('role', array_key_exists($asked, $roles) ? $asked : null);
     $oldAvail = (array) old('availability', []);
 @endphp
 <x-layouts.site title="Apply for a job" description="Send your CV to Cross Crossing Medical Centre, San Fernando.">
-    <x-page-header :title="$selected ? 'Apply: '.$selected->title : 'Send your application'" lead="Attach your CV and tell us what kind of work you are looking for. The HR team reviews every application." code="HR" label="Careers" />
+    <x-page-header :title="$selected ? 'Apply: '.$selected->title : 'Send your application'" lead="Attach your CV and tell us what kind of work you are looking for. The HR team reviews every application." code="HR" label="Careers" photo="nursing" photo-alt="Illustrative photo: a smiling nurse in a white uniform on a Caribbean hospital ward" position="center 30%" />
 
     <div class="wrap mt-10 max-w-4xl md:mt-14">
         <form method="POST" action="{{ route('careers.store') }}" enctype="multipart/form-data" class="panel space-y-10 p-6 md:p-9" x-data="requestForm" @submit="submit">
@@ -34,8 +35,10 @@
 
             <fieldset class="space-y-5">
                 <legend class="fieldset-title mb-5"><span class="step">2</span>Your CV and certificates</legend>
-                <x-field name="cv" label="CV" type="file" :required="true" accept=".pdf,.doc,.docx" hint="PDF or Word, up to 5 MB." />
-                <x-field name="certificates[]" label="Certificates or licences" type="file" :optional="true" multiple accept=".pdf,.jpg,.jpeg,.png,.webp,.heic,.heif" hint="Up to 3 files, 8 MB each." />
+                <x-field name="cv" label="CV" type="file" :required="\App\Support\UploadStash::listed(request(), 'career', 'cv') === []" accept=".pdf,.doc,.docx" hint="PDF or Word, up to 5 MB." />
+                <x-attached form="career" field="cv" />
+                <x-field name="certificates[]" label="Certificates or licences" type="file" :optional="true" multiple accept=".pdf,.jpg,.jpeg,.png,.webp,.heic,.heif" hint="Up to 3 files, 4 MB each." />
+                <x-attached form="career" field="certificates" />
                 <x-error for="certificates" />
                 <x-field name="message" label="A short note to HR" type="textarea" :optional="true" rows="4" maxlength="2000" />
             </fieldset>

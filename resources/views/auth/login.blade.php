@@ -16,7 +16,7 @@
             </div>
             <div>
                 <label class="mb-1.5 block text-sm font-semibold" for="email">Email</label>
-                <input class="a-input w-full" id="email" name="email" type="email" value="{{ old('email') }}" required autofocus autocomplete="username" @error('email') aria-invalid="true" aria-describedby="email-error" @enderror>
+                <input class="a-input w-full" id="email" name="email" type="email" value="{{ old_text('email') }}" required autofocus autocomplete="username" @error('email') aria-invalid="true" aria-describedby="email-error" @enderror>
                 <x-error for="email" />
             </div>
             <div>

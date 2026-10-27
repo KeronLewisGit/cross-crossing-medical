@@ -7,9 +7,9 @@
 <div>
     <label for="{{ $id }}" class="label">{{ $label }}@if($optional) <span class="opt">(optional)</span>@endif</label>
     @if ($type === 'textarea')
-        <textarea id="{{ $id }}" name="{{ $name }}" @required($required) @if($errors->has($name)) aria-invalid="true" @endif @if($describedBy) aria-describedby="{{ $describedBy }}" @endif {{ $attributes->merge(['class' => 'input']) }}>{{ old($name, $value) }}</textarea>
+        <textarea id="{{ $id }}" name="{{ $name }}" @required($required) @if($errors->has($name)) aria-invalid="true" @endif @if($describedBy) aria-describedby="{{ $describedBy }}" @endif {{ $attributes->merge(['class' => 'input']) }}>{{ old_text($name, $value) }}</textarea>
     @else
-        <input id="{{ $id }}" name="{{ $name }}" type="{{ $type }}" value="{{ old($name, $value) }}" @required($required) @if($errors->has($name)) aria-invalid="true" @endif @if($describedBy) aria-describedby="{{ $describedBy }}" @endif {{ $attributes->merge(['class' => 'input']) }}>
+        <input id="{{ $id }}" name="{{ $name }}" type="{{ $type }}" value="{{ old_text($name, $value) }}" @required($required) @if($errors->has($name)) aria-invalid="true" @endif @if($describedBy) aria-describedby="{{ $describedBy }}" @endif {{ $attributes->merge(['class' => 'input']) }}>
     @endif
     @if ($hint)<span id="{{ $id }}-hint" class="hint">{{ $hint }}</span>@endif
     <x-error :for="$name" />

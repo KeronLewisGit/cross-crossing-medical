@@ -2,7 +2,8 @@
     $phones = (array) ccmc('phones');
     $address = ccmc('address');
     $dental = ccmc('departments.dental');
-    $topic = old('topic', array_key_exists((string) request('topic'), $topics) ? request('topic') : 'general');
+    $asked = input_string(request()->query('topic'));
+    $topic = old_text('topic', array_key_exists($asked, $topics) ? $asked : 'general');
     $lat = (float) ccmc('geo.lat'); $lng = (float) ccmc('geo.lng');
     $bbox = implode(',', [$lng - 0.008, $lat - 0.005, $lng + 0.008, $lat + 0.005]);
 @endphp

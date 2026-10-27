@@ -25,6 +25,7 @@
                 </div>
                 <x-field name="reason" label="Reason for the visit" type="textarea" :optional="true" rows="3" maxlength="500" hint="A few words is enough, e.g. 'follow-up for blood pressure'. Please don't include detailed medical history." />
                 <x-field name="referral" label="Doctor's referral or test request" type="file" :optional="true" accept=".pdf,.jpg,.jpeg,.png,.webp,.heic,.heif" hint="A photo or PDF, up to 8 MB. Kept privately for the appointments team." />
+                <x-attached form="appointment" field="referral" />
             </fieldset>
 
             <fieldset class="space-y-5">

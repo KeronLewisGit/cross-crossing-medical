@@ -8,7 +8,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-/** route middleware: role:admin,sales */
+/** route middleware: role:admin,front_desk */
 class EnsureRole
 {
     public function handle(Request $request, Closure $next, string ...$roles): Response

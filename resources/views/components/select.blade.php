@@ -1,7 +1,7 @@
 @props(['name', 'label', 'options' => [], 'required' => false, 'hint' => null, 'value' => null, 'placeholder' => 'Choose…', 'optional' => false])
 @php
     $id = 'f-'.str_replace(['.', '[', ']'], '-', $name);
-    $current = (string) old($name, $value);
+    $current = old_text($name, $value);
 @endphp
 <div>
     <label for="{{ $id }}" class="label">{{ $label }}@if($optional) <span class="opt">(optional)</span>@endif</label>
