@@ -1,28 +1,28 @@
-# Hadeed Motors – Hostinger installation guide
+# Cross Crossing Medical Centre – Hostinger installation guide
 
 Requirements: **PHP 8.3** (8.4 also works), a **MySQL database**, and SSH access if possible. Without SSH, use the zip and its one-time `setup.php` installer (Option A).
 
 ## Option A – upload the zip into public_html (fastest, no Git or SSH)
 
-Run `scripts/package-hostinger.sh` locally. It builds `dist/hadeed-hostinger.zip`, which includes the production `vendor/` and built assets.
+Run `scripts/package-hostinger.sh` locally. It builds `dist/ccmc-hostinger.zip`, which includes the production `vendor/` and built assets.
 
 ```
 public_html/
 ├── index.php  .htaccess  robots.txt  favicon.svg  setup.php
 ├── build/                 compiled CSS, JS and fonts
 ├── img/                   site photography (WebP, three sizes each)
-├── uploads/vehicles/      vehicle photos added in the dashboard (scripts never run here)
-└── hadeed-app/            the Laravel application (blocked from the web by its own .htaccess)
+├── uploads/handouts/      patient handout PDFs added in the dashboard (scripts never run here)
+└── ccmc-app/            the Laravel application (blocked from the web by its own .htaccess)
 ```
 
 Before you start, do steps 1–4 of **Prepare hPanel** in Option B below (domain + SSL, PHP 8.3, MySQL database, mailbox).
 
 1. In File Manager, empty `public_html/` (delete Hostinger's `default.php`), upload the zip to `public_html` and extract it there.
-2. Copy `hadeed-app/.env.example` to `hadeed-app/.env`. Fill in the database, mail and `HADEED_*` values, and set `SETUP_TOKEN` to a long random string.
-3. Open `https://www.hadeedmotors.com/setup.php?token=YOUR_TOKEN`. It generates the app key, migrates, creates the first staff account and deletes itself.
+2. Copy `ccmc-app/.env.example` to `ccmc-app/.env`. Fill in the database, mail and `CCMC_*` values, and set `SETUP_TOKEN` to a long random string.
+3. Open `https://www.ccmctt.com/setup.php?token=YOUR_TOKEN`. It generates the app key, migrates, creates the first staff account and deletes itself.
 4. Remove `SETUP_TOKEN` from `.env`.
 
-To update later, build a new zip, and upload and extract it over the old files. `hadeed-app/.env`, `hadeed-app/storage/` (customer uploads, logs) and `uploads/` are not in the zip, so they are kept. Then visit `/setup.php?token=…` again if the release has new migrations (add a `SETUP_TOKEN` first; once a staff account exists the installer only migrates and never creates or resets accounts), or run `php artisan migrate --force` over SSH from `hadeed-app/`.
+To update later, build a new zip, and upload and extract it over the old files. `ccmc-app/.env`, `ccmc-app/storage/` (patient documents, CVs, logs) and `uploads/` are not in the zip, so they are kept. Then visit `/setup.php?token=…` again if the release has new migrations (add a `SETUP_TOKEN` first; once a staff account exists the installer only migrates and never creates or resets accounts), or run `php artisan migrate --force` over SSH from `ccmc-app/`.
 
 ## Option B – Hostinger Git deployment (for ongoing development)
 
@@ -43,21 +43,21 @@ public_html/
 
 ### 1. Prepare hPanel (one time)
 
-1. **Domain and SSL.** Point `hadeedmotors.com` at the hosting plan. The current site has no valid certificate for this domain, so this step fixes the browser "Not secure" warning, then go to hPanel → Security → SSL and install the free certificate. The `.htaccess` redirects every request to HTTPS, so the site will not load until the certificate is active.
-2. **PHP version.** Go to hPanel → Advanced → PHP Configuration and choose **PHP 8.3** (8.4 also works). Leave the default extensions enabled. `pdo_mysql`, `mbstring`, `openssl`, `fileinfo`, `tokenizer` and `gd` (vehicle photo resizing) are required.
+1. **Domain and SSL.** `ccmctt.com` and `www.ccmctt.com` currently forward to a free Google Site (`sites.google.com/site/ccmctt`). Point the domain at the hosting plan instead (keep any existing MX records so `mail@ccmctt.com` keeps working), then go to hPanel → Security → SSL and install the free certificate. The `.htaccess` redirects every request to HTTPS, so the site will not load until the certificate is active.
+2. **PHP version.** Go to hPanel → Advanced → PHP Configuration and choose **PHP 8.3** (8.4 also works). Leave the default extensions enabled. `pdo_mysql`, `mbstring`, `openssl`, `fileinfo`, `tokenizer` and `gd` are required. Set `upload_max_filesize` and `post_max_size` to at least **20M** (forms accept ID photos, referral letters and CVs up to 8 MB each).
 3. **Database.** Go to hPanel → Databases → MySQL Databases and create a database and a user. Write down the full names, which include the `u123456789_` prefix, and the password.
-4. **Mailbox.** Go to hPanel → Emails and create `sales@hadeedmotors.com`. The site sends new-lead notifications to staff and booking confirmations to customers through this mailbox.
+4. **Mailbox.** Go to hPanel → Emails and create a sending mailbox such as `web@ccmctt.com` (if the centre's mail stays elsewhere, use that provider's SMTP details instead). The site sends new-request alerts to staff and reference-number confirmations to patients through it. Patient emails never contain health details.
 5. **SSH.** Go to hPanel → Advanced → SSH Access, enable it, and note the IP, port (usually `65002`) and username.
 
 ### 2. Connect the private GitHub repository
 
-The repository (`YOUR-GITHUB-USER/hadeed-motors`) is private, so Hostinger needs a read-only deploy key.
+The repository (`YOUR-GITHUB-USER/cross-crossing-medical`) is private, so Hostinger needs a read-only deploy key.
 
 1. Go to hPanel → Advanced → **GIT** and click **Generate SSH key**. Copy the public key.
 2. On GitHub, go to the repository → Settings → Deploy keys → **Add deploy key**. Paste the key, name it "Hostinger", and leave *Allow write access* unchecked.
 3. Hostinger only deploys into an **empty** directory. Open File Manager and delete everything in `public_html/`, including Hostinger's `default.php`.
 4. Back in hPanel → GIT → Create a new repository, fill in:
-   - **Repository:** `git@github.com:YOUR-GITHUB-USER/hadeed-motors.git` (the SSH address, not `https://`)
+   - **Repository:** `git@github.com:YOUR-GITHUB-USER/cross-crossing-medical.git` (the SSH address, not `https://`)
    - **Branch:** `master`
    - **Directory:** leave empty. An empty value deploys into `public_html/`.
 5. Click **Create**, then **Deploy**. When `composer.json` is present, Hostinger runs `composer install` after it clones the repository.
@@ -66,24 +66,25 @@ The repository (`YOUR-GITHUB-USER/hadeed-motors`) is private, so Hostinger needs
 
 ```bash
 ssh -p 65002 u123456789@YOUR_SERVER_IP
-cd ~/domains/hadeedmotors.com/public_html
+cd ~/domains/ccmctt.com/public_html
 
 php -v                                   # must be 8.3+. If not, replace `php` below with /opt/alt/php83/usr/bin/php
 ls vendor/autoload.php                   # if this is missing, Composer did not run: see the next line
 composer install --no-dev --optimize-autoloader --no-interaction
 
 cp deploy/env.production.example .env
-nano .env                                # DB_*, MAIL_PASSWORD, HADEED_* values. Leave APP_KEY empty
+nano .env                                # DB_*, MAIL_PASSWORD, CCMC_* values. Leave APP_KEY empty
 chmod -R 775 storage bootstrap/cache
 php artisan key:generate --force
 php artisan migrate --force
-php artisan app:create-admin             # first administrator (prompts for name, email, password); add other staff in Dashboard → Staff
+php artisan db:seed --class=HandoutSeeder --force   # starter patient handouts (links to NIH, MedlinePlus and PAHO pages)
+php artisan app:create-admin             # first administrator (prompts for name, email, password); add other staff in Staff desk → Staff
 php artisan optimize
 ```
 
 `SETUP_TOKEN` and the `ADMIN_*` lines in `.env` are only used by the zip installer (Option A). Leave them empty here.
 
-Open `https://www.hadeedmotors.com` and sign in at `/login` to check the install.
+Open `https://www.ccmctt.com` and sign in at `/login` to check the install.
 
 ### 4. Turn on automatic deploys (optional)
 
@@ -96,7 +97,7 @@ Go to hPanel → GIT → your repository → **Auto Deployment** and copy the we
 3. Over SSH:
 
    ```bash
-   cd ~/domains/hadeedmotors.com/public_html
+   cd ~/domains/ccmctt.com/public_html
    composer install --no-dev --optimize-autoloader --no-interaction
    php artisan migrate --force
    php artisan optimize
@@ -116,16 +117,18 @@ Go to hPanel → GIT → your repository → **Auto Deployment** and copy the we
 | "Your Composer dependencies require a PHP version >= 8.3" | The website or SSH PHP is older than 8.3. Fix it in PHP Configuration, or run `/opt/alt/php83/usr/bin/php $(which composer) install --no-dev`. |
 | Redirect loop or "too many redirects" | SSL is not active yet, or Cloudflare is in *Flexible* mode. Use *Full*. |
 | Page loads without styling | `public/build/` was not committed. Run `npm run build` locally, commit, push and deploy again. |
-| Emails never arrive | Check `MAIL_*` and `HADEED_NOTIFY_EMAIL` in `.env`, run `php artisan optimize`, and check the mailbox's spam folder. |
+| Emails never arrive | Check `MAIL_*`, `CCMC_NOTIFY_EMAIL` and `CCMC_NOTIFY_HR_EMAIL` in `.env`, run `php artisan optimize`, and check the mailbox's spam folder. The staff desk shows a reminder until the notification inboxes are set. |
+| Uploads fail with "too large" | Raise `upload_max_filesize` and `post_max_size` to 20M in PHP Configuration. |
 
 ## Check after install
 
-- `https://www.hadeedmotors.com/.env`, `/.git/config` and `/composer.json` must return 403 or 404. For Option A, check `/hadeed-app/` as well.
+- `https://www.ccmctt.com/.env`, `/.git/config` and `/composer.json` must return 403 or 404. For Option A, check `/ccmc-app/` and `/ccmc-app/storage/app/private/submissions/` as well.
 - `http://` must redirect to `https://`.
-- From a phone, book a test drive and a service, request a part with a photo, and send a trade-in and a finance pre-qualification with a small PDF. Each should show a reference number, email the customer, and email `HADEED_NOTIFY_EMAIL`.
-- Sign in as a **Finance** user and open the ID and pay slip from the finance application. Then sign in as an administrator and confirm the same files show a lock. Confirm `/hadeed-app/storage/app/private/leads/` returns 403 (Option A) or that `storage/` is unreachable (Option B).
-- Add a vehicle with photos in Dashboard → Inventory and check it on `/pre-owned`. Photos are stored in `uploads/vehicles/`, which never runs PHP.
-- In Dashboard → Settings, set the daily workshop capacity. Leave the indicative finance rate blank until FDC approves a figure; the loan estimator stays hidden until then.
-- Old addresses such as `/index.html?page=vehicle&model=jimny` and `/index.html?page=schedule-service` should redirect (301) to the new pages.
+- From a phone, send an appointment request, a new patient registration with a small ID photo and insurance card, a dialysis enquiry, a job application with a PDF CV, and a contact message. Each should show a reference number (`AP-26-…`, `PR-…`, `DI-…`, `CV-…`, `EN-…`), email the sender, and email `CCMC_NOTIFY_EMAIL` (applications go to `CCMC_NOTIFY_HR_EMAIL`).
+- Sign in as a **Registration & medical records** user and open the ID and insurance card from the registration. Then sign in as an administrator and confirm the same files show "Records team only" and cannot be opened. Check that both openings by the records user appear in Staff desk → Document log.
+- Upload a handout PDF in Staff desk → Handouts and check it on `/patient-handouts`. Files are stored in `uploads/handouts/`, which never runs PHP.
+- In Staff desk → Settings, add a site-wide notice if needed (for example a holiday change), and check it on the home page.
+- Old Google Site addresses such as `/newpatient`, `/facilities/dialysis` and `/site/ccmctt/facilities` should redirect (301) to the new pages.
 - Submit `/sitemap.xml` in Google Search Console.
-- When the site replaces the live hadeedmotors.com, set `HADEED_PREVIEW=false`. On a temporary preview domain, set it to `true` so a banner shows and search engines skip it.
+- When the site replaces the live ccmctt.com, set `CCMC_PREVIEW=false`. On a temporary preview domain, set it to `true` so a banner shows and search engines skip it.
+- Leave `CCMC_DIALYSIS_VISITORS=false` until the centre confirms it takes visiting or holiday dialysis patients.

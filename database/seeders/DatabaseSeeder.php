@@ -11,10 +11,13 @@ class DatabaseSeeder extends Seeder
 {
     /**
      * Production-safe: creates the first administrator when ADMIN_EMAIL and
-     * ADMIN_PASSWORD are set in .env. No sample patients, requests or postings.
+     * ADMIN_PASSWORD are set in .env, and the starter handouts if there are none.
+     * No sample patients, requests or postings.
      */
     public function run(): void
     {
+        $this->call(HandoutSeeder::class);
+
         $email = config('ccmc.admin.email');
         $password = config('ccmc.admin.password');
 
