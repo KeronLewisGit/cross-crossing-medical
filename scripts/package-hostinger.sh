@@ -6,6 +6,10 @@ OUT="$ROOT/dist"
 STAGE="$OUT/stage"
 APP="$STAGE/ccmc-app"
 ZIP="$OUT/ccmc-hostinger.zip"
+# The client zip never carries DemoSeeder. INCLUDE_DEMO=1 builds a pitch-preview zip that does
+# (it only runs with CCMC_PREVIEW=true when APP_ENV=production).
+DEMO_EXCLUDE=(--exclude 'database/seeders/DemoSeeder.php')
+if [[ "${INCLUDE_DEMO:-0}" == "1" ]]; then DEMO_EXCLUDE=(); ZIP="$OUT/ccmc-hostinger-preview.zip"; fi
 
 cd "$ROOT"
 echo "→ Building front-end assets"
@@ -15,7 +19,7 @@ echo "→ Staging application"
 rm -rf "$STAGE" "$ZIP"; mkdir -p "$APP"
 rsync -a --delete \
   --exclude '.git' --exclude 'node_modules' --exclude 'tests' --exclude 'dist' --exclude 'deploy' --exclude 'scripts' \
-  --exclude '/public' --exclude '/vendor' --exclude '.env' --exclude 'database/database.sqlite' \
+  --exclude '/public' --exclude '/vendor' --exclude '.env' --exclude 'database/database.sqlite' ${DEMO_EXCLUDE[@]+"${DEMO_EXCLUDE[@]}"} \
   --exclude 'storage/logs/*' --exclude 'storage/framework/cache/data/*' --exclude 'storage/framework/sessions/*' \
   --exclude 'storage/framework/views/*' --exclude 'storage/framework/testing/*' --exclude 'storage/app/private/*' --exclude 'storage/app/public/*' --exclude 'bootstrap/cache/*' \
   --exclude '.phpunit*' --exclude 'public/_frame.html' --exclude 'phpunit.xml' --exclude 'boost.json' --exclude 'AGENTS.md' --exclude 'CLAUDE.md' --exclude 'README.md' \

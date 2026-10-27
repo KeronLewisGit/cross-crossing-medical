@@ -1,4 +1,4 @@
-# Uploaded vehicle photos only. Never run scripts from this folder.
+# Patient handout PDFs uploaded in the staff desk (public by design). Never run scripts from this folder.
 <FilesMatch "\.(?i:php\d?|phtml|phar|pl|py|cgi|sh)$">
     <IfModule mod_authz_core.c>
         Require all denied

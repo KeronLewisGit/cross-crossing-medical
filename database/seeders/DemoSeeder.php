@@ -36,6 +36,12 @@ class DemoSeeder extends Seeder
 
     public function run(): void
     {
+        // It wipes the uploads folder and creates staff accounts with the password "password", so on
+        // a production server it only runs for a pitch preview (CCMC_PREVIEW=true). Reset the demo
+        // passwords afterwards.
+        if (app()->isProduction() && ! ccmc('preview')) {
+            throw new \RuntimeException('DemoSeeder never runs in production unless CCMC_PREVIEW=true: it deletes uploaded patient documents and adds demo logins.');
+        }
         mt_srand(4411);
         Storage::disk('local')->deleteDirectory('submissions');
 
@@ -169,7 +175,7 @@ class DemoSeeder extends Seeder
                     'for_whom' => $forOther ? 'other' : 'self', 'relationship' => $forOther ? $patientDetails['relationship'] : null,
                     'address' => mt_rand(2, 140).' '.Arr::random(['Main Road', 'Oliver Avenue', 'Rambert Street', 'Golconda Road', 'Pond Street', 'Hill Drive']),
                     'town' => Arr::random(self::TOWNS), 'id_type' => Arr::random(array_keys(FormController::ID_TYPES)),
-                    'insured' => $insured ? 'yes' : 'no', 'insurer' => $insured ? 'Demo Health Insurance Co.' : null,
+                    'insured' => $insured, 'insurer' => $insured ? 'Demo Health Insurance Co.' : null,
                     'emergency_name' => Arr::random(self::FIRST).' '.$last, 'emergency_relationship' => Arr::random(['spouse', 'mother', 'brother', 'daughter']),
                     'emergency_phone' => '868-'.mt_rand(300, 799).'-'.mt_rand(1000, 9999), 'reminders' => (bool) mt_rand(0, 1),
                 ]];

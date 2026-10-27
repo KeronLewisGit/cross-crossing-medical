@@ -11,7 +11,7 @@
     RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
     # Never serve the application folder directly
-    RewriteRule ^hadeed-app(/|$) - [F,L]
+    RewriteRule ^ccmc-app(/|$) - [F,L]
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .

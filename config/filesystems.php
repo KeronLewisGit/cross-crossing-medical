@@ -48,7 +48,7 @@ return [
             'report' => false,
         ],
 
-        // Vehicle photos uploaded in the admin. They sit inside the web root
+        // Patient handout PDFs uploaded in the staff desk. They sit inside the web root
         // (public/ locally, public_html/ on Hostinger) so no storage symlink is needed.
         'uploads' => [
             'driver' => 'local',
