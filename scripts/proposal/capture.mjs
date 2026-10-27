@@ -1,36 +1,32 @@
 // Captures full-page screenshots of every screen (desktop + phone) for the client proposal.
 // Slices follow the page's own sections so a screenshot never breaks mid-block.
-// Usage: npm run proposal (the dev server must already be running; env: BASE_URL, STAFF_PASSWORD, VEHICLE, LEAD_ID, FINANCE_LEAD_ID)
+// Usage: npm run proposal (the dev server must already be running with demo data; env: BASE_URL, STAFF_PASSWORD)
 import puppeteer from 'puppeteer-core';
 import fs from 'node:fs';
 import path from 'node:path';
 
-const BASE = process.env.BASE_URL ?? 'http://127.0.0.1:8105';
+const BASE = process.env.BASE_URL ?? 'http://127.0.0.1:8109';
 const OUT = path.resolve('dist/proposal/shots');
 const CHROME = process.env.CHROME_PATH ?? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const PASSWORD = process.env.STAFF_PASSWORD ?? 'password';
-const VEHICLE = process.env.VEHICLE ?? 'sample-2019-suzuki-vitara'; // demo stock with a two-photo gallery
-const LEAD = process.env.LEAD_ID ?? '87'; // a demo test-drive lead on a stock unit
-const FINANCE_LEAD = process.env.FINANCE_LEAD_ID ?? '1'; // a demo finance application with ID and pay slip
 
 fs.rmSync(OUT, { recursive: true, force: true });
 fs.mkdirSync(OUT, { recursive: true });
 
 const PUBLIC = [
-  ['home', '/'], ['lineup', '/new'], ['model', '/new/suzuki/jimny'], ['inventory', '/pre-owned'], ['vehicle', `/pre-owned/${VEHICLE}`],
-  ['finance', '/finance'], ['service', '/service'], ['about', '/about'], ['contact', '/contact'],
+  ['home', '/'], ['services', '/services'], ['emergency', '/services/accident-emergency'], ['laboratory', '/services/laboratory'],
+  ['clinics', '/clinics'], ['handouts', '/patient-handouts'], ['careers', '/careers'], ['contact', '/contact'],
 ];
 const FLOWS = [
-  ['test-drive', `/test-drive?vehicle=${VEHICLE}`], ['finance-apply', '/finance/apply'], ['trade-in', '/trade-in'], ['parts', '/parts'],
+  ['appointment', '/appointments?service=cardiology'], ['registration', '/new-patients'], ['dialysis', '/services/dialysis'], ['apply', '/careers/apply'],
 ];
 const ADMIN_PAGES = [
   ['admin-login', '/login'],
-  ['admin-dashboard', '/admin'], ['admin-inbox', '/admin/leads'], ['admin-lead', `/admin/leads/${LEAD}`],
-  ['admin-service', '/admin/service'], ['admin-finance', '/admin/finance'], ['admin-vehicles', '/admin/vehicles'],
-  ['admin-vehicle-edit', `/admin/vehicles/${VEHICLE}/edit`], ['admin-users', '/admin/users'], ['admin-settings', '/admin/settings'],
+  ['admin-dashboard', '/admin'], ['admin-inbox', '/admin/requests'], ['admin-request', 'first:appointment'],
+  ['admin-appointments', '/admin/appointments'], ['admin-jobs', '/admin/jobs'], ['admin-users', '/admin/users'],
 ];
-const FINANCE_PAGES = [['admin-lead-finance', `/admin/leads/${FINANCE_LEAD}`]];
-const MOBILE = [['m-home', '/'], ['m-vehicle', `/pre-owned/${VEHICLE}`], ['m-service', '/service#book'], ['m-test-drive', '/test-drive'], ['m-admin-dashboard', '/admin'], ['m-admin-lead', `/admin/leads/${LEAD}`]];
+const RECORDS_PAGES = [['admin-registration', 'cards:registration'], ['admin-document-log', '/admin/document-log']];
+const MOBILE = [['m-home', '/'], ['m-emergency', '/services/accident-emergency'], ['m-appointment', '/appointments'], ['m-registration', '/new-patients'], ['m-admin-dashboard', '/admin'], ['m-admin-request', 'first:appointment']];
 
 const browser = await puppeteer.launch({ executablePath: CHROME, headless: 'new', protocolTimeout: 60000, args: ['--hide-scrollbars', '--no-sandbox'] });
 const page = await browser.newPage();
@@ -38,9 +34,12 @@ await page.emulateMediaFeatures([{ name: 'prefers-reduced-motion', value: 'reduc
 
 async function settle() {
   await page.evaluate(async () => {
-    // Scroll-reveal blocks and the rolling odometer numerals: show their final state.
+    // Scroll-reveal blocks and the drawn pulse line: show their final state.
     document.querySelectorAll('[data-reveal]').forEach(e => e.classList.add('is-visible'));
-    document.querySelectorAll('.odo.roll').forEach(e => e.classList.remove('roll'));
+    document.querySelectorAll('.pulse-line.draw').forEach(e => e.classList.remove('draw'));
+    // The staff sidebar is fixed to the viewport; pin it to the page so every slice shows it full height.
+    const aside = document.querySelector('body.admin > aside');
+    if (aside && innerWidth >= 1024) Object.assign(aside.style, { position: 'absolute', bottom: 'auto', height: document.documentElement.scrollHeight + 'px' });
     // Lazy images below the fold would be blank in a full-page capture: load them all now.
     document.querySelectorAll('img[loading="lazy"]').forEach(i => { i.loading = 'eager'; });
     window.scrollTo(0, document.body.scrollHeight); await new Promise(r => setTimeout(r, 400)); window.scrollTo(0, 0);
@@ -71,6 +70,7 @@ async function measureBlocks(maxH) {
     };
     const explode = (el) => {
       const r = { ...rect(el), labels: label(el) };
+      r.own = r.bottom - r.top; // before gaps are filled in below
       if (r.bottom - r.top <= maxH) return [r];
       const kids = [...el.children].filter(k => !skip(k) && visible(k));
       if (kids.length === 0) return [{ top: r.top, bottom: r.bottom, labels: r.labels }];
@@ -100,9 +100,12 @@ async function measureBlocks(maxH) {
 function packBlocks(blocks, maxH, docH) {
   const groups = [];
   let cur = null;
-  for (const b of blocks) {
+  for (const [bi, b] of blocks.entries()) {
     const h = b.bottom - b.top;
-    if (cur && b.bottom - cur.top <= maxH) { cur.bottom = b.bottom; cur.labels = [...new Set([...cur.labels, ...(b.labels ?? [])])]; continue; }
+    const next = blocks[bi + 1];
+    // A short block (a section label) that would end one slice while its section starts the next goes with its section.
+    const orphan = (b.own ?? h) < 90 && cur && next && next.bottom - cur.top > maxH && next.bottom - b.top <= maxH;
+    if (cur && b.bottom - cur.top <= maxH && !orphan) { cur.bottom = b.bottom; cur.labels = [...new Set([...cur.labels, ...(b.labels ?? [])])]; continue; }
     if (cur) groups.push(cur);
     if (h > maxH) {
       for (let y = b.top; y < b.bottom; y += maxH) groups.push({ top: y, bottom: Math.min(y + maxH, b.bottom), labels: b.labels ?? [] });
@@ -119,9 +122,25 @@ function packBlocks(blocks, maxH, docH) {
   return groups;
 }
 
-const RATIO = 1.08; // slice height ÷ width that fits a letter page beneath the heading and bullets
+const RATIO = 1.0; // slice height ÷ width: one slice fills a letter page beneath the heading and bullets
+
+/** "first:type" = the newest request of that type; "cards:registration" = a registration with ID and insurance cards. */
+const resolved = {};
+async function resolve(url) {
+  if (!/^(first|cards):/.test(url)) return url;
+  if (resolved[url]) return resolved[url];
+  const [mode, type] = url.split(':');
+  await page.goto(`${BASE}/admin/requests?type=${type}`, { waitUntil: 'networkidle0' });
+  const href = await page.evaluate((mode) => {
+    const rows = [...document.querySelectorAll('table.data-table tbody tr')];
+    const pick = mode === 'cards' ? rows.find(r => /\b2\s*$/.test(r.cells[1]?.textContent.trim() ?? '')) ?? rows[0] : rows[0];
+    return pick?.querySelector('a[href*="/admin/requests/"]')?.getAttribute('href');
+  }, mode);
+  return (resolved[url] = new URL(href, BASE).pathname);
+}
 
 async function shoot(name, url, { width = 1440, height = 900, fullPage = true, mobile = false } = {}) {
+  url = await resolve(url);
   await page.setViewport({ width, height, deviceScaleFactor: mobile ? 2 : 1.25, isMobile: mobile, hasTouch: mobile });
   await page.goto(BASE + url, { waitUntil: 'networkidle0' });
   await settle();
@@ -138,6 +157,9 @@ async function shoot(name, url, { width = 1440, height = 900, fullPage = true, m
   const maxH = Math.round(width * RATIO);
   let { blocks, docH } = await measureBlocks(maxH);
   if (name !== 'home') { blocks = blocks.filter(b => !b.trailing); docH = blocks[blocks.length - 1].bottom; } // CTA band + footer are shown once (home)
+  // The "Other departments" strip repeats on every department page; leave it out of the proposal.
+  const last = blocks[blocks.length - 1];
+  if (blocks.length > 1 && last.labels.length === 1 && last.labels[0] === 'Other departments') { blocks.pop(); docH = blocks[blocks.length - 1].bottom; }
   const groups = packBlocks(blocks, maxH, docH);
   for (const [i, g] of groups.entries()) {
     const file = path.join(OUT, groups.length > 1 ? `${name}-${i}.jpg` : `${name}.jpg`);
@@ -167,13 +189,14 @@ for (const [n, u] of [...PUBLIC, ...FLOWS]) shots.push(await shoot(n, u));
 const DESK = { width: 1280, height: 1000 };
 shots.push(await shoot(...ADMIN_PAGES[0], DESK));
 for (const [n, u] of MOBILE.filter(([n]) => !n.startsWith('m-admin'))) shots.push(await shoot(n, u, { width: 390, height: 844, mobile: true, fullPage: false }));
-await login('admin@hadeed.test');
-for (const [n, u] of ADMIN_PAGES.slice(1)) shots.push(await shoot(n, u, { ...DESK, fullPage: !u.endsWith('/finance') }));
+await login('admin@ccmc.test');
+// The inbox and the 14-day appointment sheet are long lists; their first screen is enough to show them.
+for (const [n, u] of ADMIN_PAGES.slice(1)) shots.push(await shoot(n, u, { ...DESK, fullPage: !['admin-appointments', 'admin-inbox'].includes(n) }));
 for (const [n, u] of MOBILE.filter(([n]) => n.startsWith('m-admin'))) shots.push(await shoot(n, u, { width: 390, height: 844, mobile: true, fullPage: false }));
 await logout();
-// The finance role is the only one that can open ID and pay slips, so that view is captured as finance.
-await login('finance@hadeed.test');
-for (const [n, u] of FINANCE_PAGES) shots.push(await shoot(n, u));
+// Only the registration and records role can open ID and insurance cards, so that view is captured as records.
+await login('records@ccmc.test');
+for (const [n, u] of RECORDS_PAGES) shots.push(await shoot(n, u, DESK));
 await logout();
 fs.writeFileSync(path.join(OUT, 'chunks.json'), JSON.stringify(Object.fromEntries(shots.map(s => [s.name, s])), null, 1));
 await browser.close();
