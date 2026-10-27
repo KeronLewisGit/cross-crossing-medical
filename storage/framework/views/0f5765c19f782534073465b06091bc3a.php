@@ -11,14 +11,14 @@
 <?php $component->withAttributes(['title' => 'New patients: register before your first visit','description' => 'Register as a new patient at Cross Crossing Medical Centre, San Fernando, before your first visit. Add your ID and insurance card privately from your phone.']); ?>
     <?php if (isset($component)) { $__componentOriginalf8d4ea307ab1e58d4e472a43c8548d8e = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalf8d4ea307ab1e58d4e472a43c8548d8e = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.page-header','data' => ['title' => 'New patient registration','lead' => 'Fill in the patient\'s details at home and your first visit starts with care, not paperwork. It takes about five minutes.','code' => 'REG','label' => 'New patients','photo' => 'reception','photoAlt' => 'The reception desk and red waiting-room chairs at the centre']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.page-header','data' => ['title' => 'New patient registration','lead' => 'Fill in the patient\'s details at home and your first visit starts with care, not paperwork. It takes about five minutes.','code' => 'REG','label' => 'New patients','photo' => 'lettering','photoAlt' => 'Gold lettering reading Cross Crossing Medical Centre, above the word Reception']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('page-header'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['title' => 'New patient registration','lead' => 'Fill in the patient\'s details at home and your first visit starts with care, not paperwork. It takes about five minutes.','code' => 'REG','label' => 'New patients','photo' => 'reception','photo-alt' => 'The reception desk and red waiting-room chairs at the centre']); ?>
+<?php $component->withAttributes(['title' => 'New patient registration','lead' => 'Fill in the patient\'s details at home and your first visit starts with care, not paperwork. It takes about five minutes.','code' => 'REG','label' => 'New patients','photo' => 'lettering','photo-alt' => 'Gold lettering reading Cross Crossing Medical Centre, above the word Reception']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginalf8d4ea307ab1e58d4e472a43c8548d8e)): ?>

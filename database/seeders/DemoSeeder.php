@@ -64,9 +64,12 @@ class DemoSeeder extends Seeder
 
         foreach ($plan as $i => $type) {
             // Spread over 30 days, busier recently; the last few are only minutes or hours old.
-            $minutesAgo = $i < 6 ? mt_rand(8, 200) : (int) (pow(mt_rand(0, 1000) / 1000, 1.4) * 30 * 24 * 60);
+            // The first six stay new: a few inside their call-back window, a few already late,
+            // so the dashboard headline has something to show.
+            $fresh = $i < 6;
+            $minutesAgo = $fresh ? [14, 38, 75, 165, 250, 330][$i] : (int) (pow(mt_rand(0, 1000) / 1000, 1.4) * 30 * 24 * 60) + 400;
             $created = now()->subMinutes($minutesAgo)->setSecond(0);
-            $this->submission($type, $created, $users, $jobs);
+            $this->submission($fresh && $i >= 3 ? SubmissionType::Appointment : $type, $created, $users, $jobs, progress: ! $fresh);
         }
 
         // A few document openings by the records officer, so the log isn't empty.
@@ -115,7 +118,7 @@ class DemoSeeder extends Seeder
      * @param  array<string, User>  $users
      * @param  list<JobPosting>  $jobs
      */
-    private function submission(SubmissionType $type, Carbon $created, array $users, array $jobs): void
+    private function submission(SubmissionType $type, Carbon $created, array $users, array $jobs, bool $progress = true): void
     {
         $first = Arr::random(self::FIRST);
         $last = Arr::random(self::LAST);
@@ -208,7 +211,9 @@ class DemoSeeder extends Seeder
             $s->files()->create(['kind' => $kind, 'path' => $path, 'original_name' => $original, 'mime' => str_ends_with($original, '.pdf') ? 'application/pdf' : 'image/jpeg', 'size' => strlen($bytes)]);
         }
 
-        $this->progress($s, $created, $users);
+        if ($progress) {
+            $this->progress($s, $created, $users);
+        }
     }
 
     /**

@@ -1,6 +1,6 @@
 @php($idTypes = \App\Http\Controllers\FormController::ID_TYPES)
 <x-layouts.site title="New patients: register before your first visit" description="Register as a new patient at Cross Crossing Medical Centre, San Fernando, before your first visit. Add your ID and insurance card privately from your phone.">
-    <x-page-header title="New patient registration" lead="Fill in the patient's details at home and your first visit starts with care, not paperwork. It takes about five minutes." code="REG" label="New patients" photo="reception" photo-alt="The reception desk and red waiting-room chairs at the centre" />
+    <x-page-header title="New patient registration" lead="Fill in the patient's details at home and your first visit starts with care, not paperwork. It takes about five minutes." code="REG" label="New patients" photo="lettering" photo-alt="Gold lettering reading Cross Crossing Medical Centre, above the word Reception" />
 
     <div class="wrap mt-10 grid gap-10 md:mt-14 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-14">
         <form method="POST" action="{{ route('new-patients.store') }}" enctype="multipart/form-data" class="panel space-y-10 p-6 md:p-9" x-data="requestForm" @submit="submit">

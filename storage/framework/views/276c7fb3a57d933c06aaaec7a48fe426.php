@@ -19,14 +19,14 @@
             <div>
                 <?php if (isset($component)) { $__componentOriginal1a0bbf47f5ba44b1cbe5d2a17343b95d = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal1a0bbf47f5ba44b1cbe5d2a17343b95d = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.sign','data' => ['code' => 'CCMC','label' => 'Oliver Avenue · San Fernando']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.sign','data' => ['code' => 'CCMC','label' => 'San Fernando']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('sign'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['code' => 'CCMC','label' => 'Oliver Avenue · San Fernando']); ?>
+<?php $component->withAttributes(['code' => 'CCMC','label' => 'San Fernando']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal1a0bbf47f5ba44b1cbe5d2a17343b95d)): ?>

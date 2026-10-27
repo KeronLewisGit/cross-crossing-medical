@@ -8,7 +8,7 @@
     <section class="relative overflow-hidden">
         <div class="wrap grid gap-10 pb-10 pt-10 md:pt-14 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:items-center lg:gap-14 lg:pb-16 lg:pt-16">
             <div>
-                <x-sign code="CCMC" label="Oliver Avenue · San Fernando" />
+                <x-sign code="CCMC" label="San Fernando" />
                 <h1 class="display-1 mt-6 max-w-[14ch]">Care around the clock in San&nbsp;Fernando.</h1>
                 <p class="lead mt-5 text-ink-2">Physicians and a full nursing staff, an emergency room, a cardiac care unit, a dialysis unit, lab, X-ray and surgical suites, all in one building near Halliburton. Open 24 hours a day, 7 days a week, 365 days a year.</p>
                 <div class="mt-8 flex flex-wrap gap-3">

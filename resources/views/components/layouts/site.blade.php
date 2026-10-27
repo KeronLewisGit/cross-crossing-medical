@@ -89,9 +89,9 @@
             <nav class="hidden items-center xl:flex" aria-label="Main">
                 @foreach ($nav as $item)
                     @php($current = request()->routeIs($item['match']))
-                    <a href="{{ route($item['route']) }}" @class(['relative whitespace-nowrap px-3 py-2.5 text-[0.9375rem] font-bold transition-colors', 'text-link' => $current, 'text-ink-2 hover:text-ink' => ! $current]) @if($current) aria-current="page" @endif>
+                    <a href="{{ route($item['route']) }}" @class(['relative whitespace-nowrap px-2.5 py-2.5 text-[0.9375rem] font-bold transition-colors 2xl:px-3.5', 'text-link' => $current, 'text-ink-2 hover:text-ink' => ! $current]) @if($current) aria-current="page" @endif>
                         {{ $item['label'] }}
-                        @if ($current)<span class="absolute inset-x-3 -bottom-[1.05rem] h-[3px] rounded-full bg-[color:var(--link)]" aria-hidden="true"></span>@endif
+                        @if ($current)<span class="absolute inset-x-2.5 -bottom-[1.05rem] h-[3px] rounded-full bg-[color:var(--link)]" aria-hidden="true"></span>@endif
                     </a>
                 @endforeach
             </nav>

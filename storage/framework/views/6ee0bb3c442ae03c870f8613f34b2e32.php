@@ -212,10 +212,10 @@ unset($__defined_vars, $__key, $__value); ?>
             <nav class="hidden items-center xl:flex" aria-label="Main">
                 <?php $__currentLoopData = $nav; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <?php ($current = request()->routeIs($item['match'])); ?>
-                    <a href="<?php echo e(route($item['route'])); ?>" class="<?php echo \Illuminate\Support\Arr::toCssClasses(['relative whitespace-nowrap px-3 py-2.5 text-[0.9375rem] font-bold transition-colors', 'text-link' => $current, 'text-ink-2 hover:text-ink' => ! $current]); ?>" <?php if($current): ?> aria-current="page" <?php endif; ?>>
+                    <a href="<?php echo e(route($item['route'])); ?>" class="<?php echo \Illuminate\Support\Arr::toCssClasses(['relative whitespace-nowrap px-2.5 py-2.5 text-[0.9375rem] font-bold transition-colors 2xl:px-3.5', 'text-link' => $current, 'text-ink-2 hover:text-ink' => ! $current]); ?>" <?php if($current): ?> aria-current="page" <?php endif; ?>>
                         <?php echo e($item['label']); ?>
 
-                        <?php if($current): ?><span class="absolute inset-x-3 -bottom-[1.05rem] h-[3px] rounded-full bg-[color:var(--link)]" aria-hidden="true"></span><?php endif; ?>
+                        <?php if($current): ?><span class="absolute inset-x-2.5 -bottom-[1.05rem] h-[3px] rounded-full bg-[color:var(--link)]" aria-hidden="true"></span><?php endif; ?>
                     </a>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </nav>
