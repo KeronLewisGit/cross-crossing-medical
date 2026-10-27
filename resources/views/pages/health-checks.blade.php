@@ -1,5 +1,5 @@
 <x-layouts.site title="Health self-checks" description="Quick health self-checks: diabetes risk, body mass index (BMI) and fracture risk, with the tests Cross Crossing Medical Centre can do to follow up.">
-    <x-page-header title="Health self-checks" lead="A few quick checks you can do at home. They are a starting point for a conversation with your doctor, never a diagnosis." code="PC" label="Patient corner" />
+    <x-page-header title="Health self-checks" lead="A few quick checks you can do at home. They are a starting point for a conversation with your doctor, never a diagnosis." code="PC" label="Patient corner" photo="consultation" photo-alt="Illustrative photo: a doctor holding a stethoscope" />
 
     <div class="wrap mt-12 grid gap-8 md:mt-16 lg:grid-cols-2">
         <section class="panel p-6 md:p-8" id="bmi" aria-labelledby="bmi-title">

@@ -1,5 +1,5 @@
 <x-layouts.site title="Site map">
-    <x-page-header title="Site map" lead="Every page on this website." code="MAP" label="Site map" />
+    <x-page-header title="Site map" lead="Every page on this website." code="MAP" label="Site map" photo="direction-sign" photo-alt="The roadside sign pointing to the centre" />
     <div class="wrap mt-12 grid gap-10 md:mt-16 sm:grid-cols-2 lg:grid-cols-4">
         @foreach ([
             'The centre' => [route('home') => 'Home', route('about') => 'About the centre', route('contact') => 'Contact and directions', route('services') => 'Services and departments', route('clinics') => 'Specialist clinics'],

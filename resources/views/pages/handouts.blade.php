@@ -1,6 +1,6 @@
 @php($cats = \App\Models\Handout::CATEGORIES)
 <x-layouts.site title="Patient handouts" description="Free patient handouts from Cross Crossing Medical Centre: blood pressure, diabetes, bone health, vaccinations and more.">
-    <x-page-header title="Patient handouts" lead="Plain-language information to read at home or take to your appointment. These do not replace advice from your own doctor." code="PC" label="Patient corner" />
+    <x-page-header title="Patient handouts" lead="Plain-language information to read at home or take to your appointment. These do not replace advice from your own doctor." code="PC" label="Patient corner" photo="reception" photo-alt="The reception and waiting area at the centre" />
 
     <div class="wrap mt-12 grid gap-12 md:mt-16 lg:grid-cols-[14rem_minmax(0,1fr)] lg:gap-16">
         <nav aria-label="Handout topics" class="lg:sticky lg:top-28 lg:self-start">

@@ -18,7 +18,9 @@ return [
     'lab-coat' => $own('A CCMC lab coat and framed certificates'),
     'direction-sign' => $own('Roadside sign pointing to the centre'),
     'building-street' => $own('The approach along the street to the centre'),
-    'dexa-report' => $own('A DEXA body-composition report'),
+    // A GE Lunar vendor sample ("Patient: Sample, Report"), as shown on the centre's website: not
+    // a real patient's report and not the centre's own photo. Replace before launch (README).
+    'dexa-report' => ['title' => 'A sample DEXA body-composition report (GE Lunar), as shown on the centre\'s website', 'author' => 'GE Medical Systems (Lunar) sample, via the centre\'s website', 'license' => 'Shown on the centre\'s current website; to be replaced', 'license_url' => null, 'source' => 'https://sites.google.com/site/ccmctt/self-evaluation/obesity', 'own' => true],
     'san-fernando' => ['title' => 'STAPP 036 San Fernando Panorama.jpg', 'author' => 'Grueslayer', 'license' => 'CC BY-SA 4.0', 'license_url' => 'https://creativecommons.org/licenses/by-sa/4.0', 'source' => 'https://commons.wikimedia.org/wiki/File:STAPP_036_San_Fernando_Panorama.jpg'],
     'dialysis' => ['title' => 'Hemodialysis machine INNOVA.jpg', 'author' => 'Vitaly Pospelov', 'license' => 'CC BY-SA 3.0', 'license_url' => 'https://creativecommons.org/licenses/by-sa/3.0', 'source' => 'https://commons.wikimedia.org/wiki/File:Hemodialysis_machine_INNOVA.jpg'],
     'laboratory' => ['title' => 'Hospital das Clínicas (42898632534).jpg', 'author' => 'Governo do Estado de São Paulo', 'license' => 'CC BY 2.0', 'license_url' => 'https://creativecommons.org/licenses/by/2.0', 'source' => 'https://commons.wikimedia.org/wiki/File:Hospital_das_Cl%C3%ADnicas_(42898632534).jpg'],

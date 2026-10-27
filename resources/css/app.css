@@ -177,6 +177,10 @@
         -webkit-text-size-adjust: 100%;
         scroll-padding-top: 7rem;
     }
+    /* Phones: focus, error and #anchor scrolling stop above the fixed Call / Request appointment bar. */
+    @media (max-width: 47.99rem) {
+        html { scroll-padding-bottom: 6rem; }
+    }
     @media (prefers-reduced-motion: no-preference) {
         html { scroll-behavior: smooth; }
     }
@@ -201,6 +205,8 @@
         border-radius: 3px;
     }
     .js [x-cloak] { display: none !important; }
+    /* Without JavaScript the submit button never shows its "Sending…" state. */
+    html:not(.js) .js-only { display: none !important; }
     /* Blue bands get a brass ring; brass fills get an ink one. */
     :where(.on-sign, .bg-sign-900, .bg-sign-950, footer) :focus-visible { outline-color: var(--brass); }
     .btn-brass:focus-visible, :where(.bg-brass) :focus-visible { outline-color: var(--ink); }
@@ -304,6 +310,13 @@
 
     .code-chip { display: inline-flex; align-items: center; padding: 0.15rem 0.4rem; border-radius: 4px; background: var(--sign-800); color: #fff; font-family: var(--ff-display), sans-serif; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.06em; }
     .code-chip.ae { background: var(--ae); }
+    /* Dark theme: the A&E red lightens to #ff7b71, where white text is only 2.5:1, so it takes near-black ink. */
+    :root[data-theme='dark'] :is(.code-chip.ae, .sign.sign-ae) { color: #1b0705; }
+    :root[data-theme='dark'] .sign.sign-ae .arrow { color: #1b0705; }
+    @media (prefers-color-scheme: dark) {
+        :root:not([data-theme='light']) :is(.code-chip.ae, .sign.sign-ae) { color: #1b0705; }
+        :root:not([data-theme='light']) .sign.sign-ae .arrow { color: #1b0705; }
+    }
 
     /* Directory board: the wayfinding sign in a hospital lobby. */
     .directory { border-radius: 16px; overflow: hidden; }

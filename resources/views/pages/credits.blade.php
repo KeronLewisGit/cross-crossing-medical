@@ -1,6 +1,6 @@
 @php($credits = (array) config('photo-credits'))
 <x-layouts.site title="Photo credits" description="Sources and licences for the photographs on this website.">
-    <x-page-header title="Photo credits" lead="Where each photograph on this website comes from. Photos marked 'illustrative' are not of the centre." code="IMG" label="Credits" />
+    <x-page-header title="Photo credits" lead="Where each photograph on this website comes from. Photos marked 'illustrative' are not of the centre." code="IMG" label="Credits" photo="building-street" photo-alt="The approach along the street to the centre" />
     <div class="wrap mt-12 md:mt-16">
         <ul class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             @foreach ($credits as $key => $c)

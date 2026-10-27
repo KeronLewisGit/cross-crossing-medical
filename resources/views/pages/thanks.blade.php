@@ -9,7 +9,7 @@
     };
 @endphp
 <x-layouts.site title="Thank you" :mobile-bar="false">
-    <x-page-header title="Thank you. We have it." :lead="$next" code="OK" :label="$type->label()" />
+    <x-page-header title="Thank you. We have it." :lead="$next" code="OK" :label="$type->label()" photo="building" photo-alt="The front of the centre on Oliver Avenue" />
     <section class="wrap mt-12 md:mt-16">
         <div class="panel max-w-xl border-l-[6px] border-l-[color:var(--pulse)] p-7 md:p-9">
             <p class="kicker text-ink-3">Your reference</p>

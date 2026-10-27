@@ -9,7 +9,7 @@
     ]];
 @endphp
 <x-layouts.site :title="$job->title" :description="$job->summary" :json-ld="$job->isOpen() ? $jsonLd : []">
-    <x-page-header :title="$job->title" :lead="$job->summary" code="HR" :label="$job->department">
+    <x-page-header :title="$job->title" :lead="$job->summary" code="HR" :label="$job->department ?: 'Careers'" photo="ward" photo-alt="Illustrative photo: a hospital ward">
         <div class="mt-5 flex flex-wrap items-center gap-2 text-sm">
             <span class="tag !bg-white/10 !text-white !ring-white/30">{{ $job->employmentLabel() }}</span>
             @if ($job->closes_on)<span class="text-white/85">Closes {{ $job->closes_on->format('j F Y') }}</span>@endif
