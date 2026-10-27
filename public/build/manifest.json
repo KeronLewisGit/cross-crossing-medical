@@ -1,0 +1,77 @@
+{
+  "_fonts-pAkg5tme.css": {
+    "file": "assets/fonts-pAkg5tme.css",
+    "src": "_fonts-pAkg5tme.css"
+  },
+  "_lexend-400-normal-CHypAkT3.woff": {
+    "file": "assets/lexend-400-normal-CHypAkT3.woff",
+    "src": "_lexend-400-normal-CHypAkT3.woff"
+  },
+  "_lexend-400-normal-CwRJVcUA.woff2": {
+    "file": "assets/lexend-400-normal-CwRJVcUA.woff2",
+    "src": "_lexend-400-normal-CwRJVcUA.woff2"
+  },
+  "_lexend-500-normal-D9x1QWTH.woff": {
+    "file": "assets/lexend-500-normal-D9x1QWTH.woff",
+    "src": "_lexend-500-normal-D9x1QWTH.woff"
+  },
+  "_lexend-500-normal-Dl-X5nog.woff2": {
+    "file": "assets/lexend-500-normal-Dl-X5nog.woff2",
+    "src": "_lexend-500-normal-Dl-X5nog.woff2"
+  },
+  "_lexend-600-normal-DSBzZxpA.woff": {
+    "file": "assets/lexend-600-normal-DSBzZxpA.woff",
+    "src": "_lexend-600-normal-DSBzZxpA.woff"
+  },
+  "_lexend-600-normal-DdvlkEkX.woff2": {
+    "file": "assets/lexend-600-normal-DdvlkEkX.woff2",
+    "src": "_lexend-600-normal-DdvlkEkX.woff2"
+  },
+  "_mulish-400-normal-BRmeVNaI.woff": {
+    "file": "assets/mulish-400-normal-BRmeVNaI.woff",
+    "src": "_mulish-400-normal-BRmeVNaI.woff"
+  },
+  "_mulish-400-normal-C9Snyl1s.woff2": {
+    "file": "assets/mulish-400-normal-C9Snyl1s.woff2",
+    "src": "_mulish-400-normal-C9Snyl1s.woff2"
+  },
+  "_mulish-600-normal-BSghSUeJ.woff2": {
+    "file": "assets/mulish-600-normal-BSghSUeJ.woff2",
+    "src": "_mulish-600-normal-BSghSUeJ.woff2"
+  },
+  "_mulish-600-normal-BgWMv2vh.woff": {
+    "file": "assets/mulish-600-normal-BgWMv2vh.woff",
+    "src": "_mulish-600-normal-BgWMv2vh.woff"
+  },
+  "_mulish-700-normal-DP36JSCV.woff2": {
+    "file": "assets/mulish-700-normal-DP36JSCV.woff2",
+    "src": "_mulish-700-normal-DP36JSCV.woff2"
+  },
+  "_mulish-700-normal-LuPokTVX.woff": {
+    "file": "assets/mulish-700-normal-LuPokTVX.woff",
+    "src": "_mulish-700-normal-LuPokTVX.woff"
+  },
+  "_mulish-800-normal-B_RVkmOV.woff2": {
+    "file": "assets/mulish-800-normal-B_RVkmOV.woff2",
+    "src": "_mulish-800-normal-B_RVkmOV.woff2"
+  },
+  "_mulish-800-normal-DFBkNLap.woff": {
+    "file": "assets/mulish-800-normal-DFBkNLap.woff",
+    "src": "_mulish-800-normal-DFBkNLap.woff"
+  },
+  "resources/css/app.css": {
+    "file": "assets/app-ByPfRxO6.css",
+    "name": "app",
+    "names": [
+      "app.css"
+    ],
+    "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-B23_jscv.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true
+  }
+}
